@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Challenge 1: Magic Token{% endblock %}
+
+{% block content %}
+<div class="challenge-page">
+    <a href="{{ url_for('dashboard') }}" style="color:var(--text-muted); font-size:.85rem; text-decoration:none;">
+        ← Dashboard
+    </a>
+
+    <div class="ch-header-meta mt-3">
+        <div class="ch-header-icon">🔑</div>
+        <div class="ch-header-info">
+            <div style="font-size:.75rem;color:var(--accent-cyan);letter-spacing:1.5px;text-transform:uppercase;">Web Security · 15 ұпай</div>
+            <h1><span>Magic Token</span></h1>
+        </div>
+    </div>
+
+    <div class="challenge-description-box">
+        <h5>📋 Тапсырма</h5>
+        <p>
+            Сервер сессия деректерін <strong>role_token</strong> атты Cookie-де сақтайды.
+            Бұл Cookie – ішінде JSON бар, <strong>Base64</strong> кодталған жол.
+        </p>
+        <p class="mt-2">Мысалы: <code style="color:var(--accent-cyan)">eyJ1c2VyIjogImFsaSIsICJyb2xlIjogImd1ZXN0In0=</code></p>
+        <p class="mt-2">
+            Ағымдағы рөліңіз: <strong style="color:var(--accent-yellow)">guest</strong>.<br>
+            Cookie-ді өзгертіп рөлді <strong style="color:var(--accent-green)">admin</strong> етіп жаз,
+            сонда <a href="/admin" style="color:var(--accent-cyan)">/admin</a> бетінде Flag табасың!
+        </p>
+    </div>
+
+    <div class="hint-box">
+        <div class="hint-label">💡 Кеңес</div>
+        <p>
+            1. Браузерде <code>F12</code> → Application → Cookies → <code>role_token</code><br>
+            2. Мәнін алып Base64 декодта (python немесе CyberChef)<br>
+            3. JSON-дағы <code>"role": "guest"</code> → <code>"role": "admin"</code> деп өзгерт<br>
+            4. Жаңа мәнді Base64 кодтап Cookie-ге қой<br>
+            5. <a href="/admin" style="color:var(--accent-cyan)">/admin</a> бетіне кір
+        </p>
+    </div>
+
+    <div class="challenge-description-box" style="border-left-color:var(--accent-purple)">
+        <h5 style="color:var(--accent-purple)">🐍 Python декодтау мысалы</h5>
+        <div class="code-block">
+import base64, json<br>
+# Декодтау<br>
+cookie = "СІЗДІҢ_COOKIE_МӘНІ"<br>
+data = json.loads(base64.b64decode(cookie))<br>
+print(data)  # {'user': '...', 'role': 'guest'}<br>
+<br>
+# Жаңа admin cookie жасау<br>
+data['role'] = 'admin'<br>
+new_cookie = base64.b64encode(json.dumps(data).encode()).decode()<br>
+print(new_cookie)
+        </div>
+    </div>
+
+    {% if 'ch1' in solved %}
+    <div class="flag-submit-box" style="border-color:var(--accent-green);">
+        <h5 style="color:var(--accent-green)">✅ Тапсырма шешілді! +15 ұпай</h5>
+    </div>
+    {% else %}
+    <div class="flag-submit-box">
+        <h5>🚩 Flag енгіз</h5>
+        <div class="flag-input-group">
+            <input type="text" id="flag-input" class="flag-input form-control"
+                   placeholder="flag{...}" autocomplete="off">
+            <button class="btn-submit-flag" onclick="submitFlag('ch1')">Тексеру</button>
+        </div>
+        <div id="flag-result" class="flag-result"></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

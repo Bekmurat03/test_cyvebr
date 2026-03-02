@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Admin Panel – CTF Platform{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <a href="{{ url_for('dashboard') }}" style="color:var(--text-muted); font-size:.85rem; text-decoration:none; display:block; margin-bottom:2rem;">
+        ← Dashboard
+    </a>
+
+    {% if flag %}
+    <div class="admin-card success">
+        <h2 style="font-family:'Rajdhani',sans-serif; color:var(--accent-green); margin-bottom:1rem;">
+            ✅ Қош келдің, Administrator!
+        </h2>
+        <p style="color:var(--text-secondary); margin-bottom:1rem;">
+            Cookie-ді сәтті өзгертіп рөлді <strong>admin</strong> жасадың. Мынау сенің марапатың:
+        </p>
+        <div class="flag-display">{{ flag }}</div>
+        <p style="color:var(--text-muted); font-size:.82rem; margin-top:1rem;">
+            Бұл флагты Challenge 1 бетіне енгізіп 15 ұпай жина.
+        </p>
+    </div>
+    {% else %}
+    <div class="admin-card danger">
+        <h2 style="font-family:'Rajdhani',sans-serif; color:var(--accent-red); margin-bottom:1rem;">
+            🚫 Кіруге рұқсат жоқ!
+        </h2>
+        <p style="color:var(--text-secondary); margin-bottom:1rem;">{{ error }}</p>
+        <p style="color:var(--text-muted); font-size:.85rem;">
+            Challenge 1 бетіне қайтып барып нұсқауларды оқы.
+        </p>
+        <a href="{{ url_for('challenge', ch_id='ch1') }}"
+           style="display:inline-block; margin-top:1.25rem; color:var(--accent-cyan); font-weight:600; text-decoration:none;">
+            → Challenge 1-ге қайт
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

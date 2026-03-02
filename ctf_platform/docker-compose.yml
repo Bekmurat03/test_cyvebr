@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  ctf-platform:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=ctf_super_secret_key_2024
+      - FLASK_ENV=production
+    volumes:
+      - ./challenges:/app/challenges
+    restart: unless-stopped

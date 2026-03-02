@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Scoreboard – CTF Practice Platform{% endblock %}
+
+{% block content %}
+<div class="scoreboard-page">
+    <div class="score-header">
+        <h2>🏆 Scoreboard</h2>
+        <p style="color:var(--text-muted);">{{ username }} – нәтижелерің</p>
+    </div>
+
+    <div class="total-score-block">
+        <div class="total-score-num">{{ score }}</div>
+        <div class="total-score-label">/ {{ max_score }} максималды ұпай</div>
+        <div style="margin-top:.75rem;">
+            {% set pct = (score / max_score * 100)|round|int %}
+            {% if pct == 100 %}
+            <span style="color:var(--accent-green);font-weight:700;">🎉 Барлық тапсырма шешілді! Тамаша!</span>
+            {% elif pct >= 50 %}
+            <span style="color:var(--accent-yellow);">💪 Жарты жолдасың! Жалғастыр!</span>
+            {% else %}
+            <span style="color:var(--text-muted);">🚀 Тапсырмаларды шеш және ұпай жина!</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Progress -->
+    <div style="margin-bottom:1.75rem;">
+        <div style="display:flex;justify-content:space-between;color:var(--text-muted);font-size:.8rem;margin-bottom:.4rem;">
+            <span>Ілгерілеу</span>
+            <span>{{ (score / max_score * 100)|round|int }}%</span>
+        </div>
+        <div class="ctf-progress">
+            <div class="ctf-progress-bar" style="width:{{ (score / max_score * 100)|round }}%"></div>
+        </div>
+    </div>
+
+    <!-- Challenge Breakdown -->
+    <table class="score-table">
+        <thead>
+            <tr>
+                <th>Тапсырма</th>
+                <th>Санат</th>
+                <th style="text-align:right">Ұпай</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in breakdown %}
+            <tr class="score-row {% if item.solved %}solved-row{% endif %}">
+                <td>
+                    <span style="font-size:1.1rem;margin-right:.4rem;">{{ item.icon }}</span>
+                    <span style="font-weight:600;">{{ item.title }}</span>
+                </td>
+                <td style="color:var(--text-muted); font-size:.85rem;">{{ item.category }}</td>
+                <td>
+                    <span class="score-pts {% if item.solved %}solved{% else %}unsolved{% endif %}">
+                        {% if item.solved %}+{{ item.points }}{% else %}—{% endif %}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4 text-center">
+        <a href="{{ url_for('dashboard') }}"
+           style="color:var(--accent-cyan);text-decoration:none;font-weight:600;">
+            ← Dashboard-қа қайт
+        </a>
+    </div>
+</div>
+{% endblock %}

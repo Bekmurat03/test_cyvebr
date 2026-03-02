@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Кіру – CTF Practice Platform{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="login-logo">
+            <span class="logo-icon">🛡️</span>
+            <h1>CTF PRACTICE</h1>
+            <p>Module A &nbsp;·&nbsp; Ақпараттық қауіпсіздік</p>
+        </div>
+
+        {% if error %}
+        <div class="alert-ctf alert-danger-ctf mb-3">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="ctf-label" for="username">Логин</label>
+                <input type="text" id="username" name="username"
+                       class="form-control ctf-input"
+                       placeholder="студент логині..."
+                       autocomplete="off" required>
+            </div>
+            <div class="mb-4">
+                <label class="ctf-label" for="password">Пароль</label>
+                <input type="password" id="password" name="password"
+                       class="form-control ctf-input"
+                       placeholder="••••••••"
+                       required>
+            </div>
+            <button type="submit" class="btn-ctf-primary">
+                🔐 &nbsp;Жүйеге кіру
+            </button>
+        </form>
+
+        <div class="mt-4 text-center" style="font-size:.78rem; color:var(--text-muted);">
+            Логиндер: <code style="color:var(--accent-green)">ali / aizat / berik / student</code><br>
+            Пароль: <code style="color:var(--accent-green)">12345678</code>
+        </div>
+    </div>
+</div>
+{% endblock %}

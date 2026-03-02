@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Challenge 2: XORed Image{% endblock %}
+
+{% block content %}
+<div class="challenge-page">
+    <a href="{{ url_for('dashboard') }}" style="color:var(--text-muted); font-size:.85rem; text-decoration:none;">
+        ← Dashboard
+    </a>
+
+    <div class="ch-header-meta mt-3">
+        <div class="ch-header-icon">🔒</div>
+        <div class="ch-header-info">
+            <div style="font-size:.75rem;color:var(--accent-cyan);letter-spacing:1.5px;text-transform:uppercase;">Cryptography · 15 ұпай</div>
+            <h1><span>XORed Image</span></h1>
+        </div>
+    </div>
+
+    <div class="challenge-description-box">
+        <h5>📋 Тапсырма</h5>
+        <p>
+            Төмендегі <strong>encrypted.bin</strong> файлы — бір байттық XOR кілтімен шифрланған PNG сурет.
+            Кілт <code style="color:var(--accent-yellow)">0x00</code> мен
+            <code style="color:var(--accent-yellow)">0xFF</code> аралығындағы бір байт.
+        </p>
+        <p class="mt-2">
+            Барлық мүмкін кілттерді байқап (brute-force), суретті шифрсыздап,
+            ішіндегі мәліметті тап!
+        </p>
+    </div>
+
+    <a href="{{ url_for('serve_challenge_file', filename='encrypted.bin') }}" class="download-btn">
+        ⬇️ encrypted.bin жүктеу
+    </a>
+
+    <div class="hint-box">
+        <div class="hint-label">💡 Кеңес</div>
+        <p>
+            Дұрыс шифрсызданған PNG файлы мына байттардан басталады:<br>
+            <code>0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A</code><br>
+            (PNG сигнатурасы). XOR кілтін осы паттерн арқылы анықта.
+        </p>
+    </div>
+
+    <div class="challenge-description-box" style="border-left-color:var(--accent-purple)">
+        <h5 style="color:var(--accent-purple)">🐍 Brute-force Python скриптінің бастамасы</h5>
+        <div class="code-block">
+with open('encrypted.bin', 'rb') as f:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data = f.read()<br>
+<br>
+PNG_SIG = bytes([0x89, 0x50, 0x4E, 0x47])<br>
+<br>
+for key in range(256):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;decrypted = bytes([b ^ key for b in data])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if decrypted[:4] == PNG_SIG:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"Кілт табылды: 0x{key:02X}")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with open(f'result_{key}.png', 'wb') as out:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.write(decrypted)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break
+        </div>
+    </div>
+
+    {% if 'ch2' in solved %}
+    <div class="flag-submit-box" style="border-color:var(--accent-green);">
+        <h5 style="color:var(--accent-green)">✅ Тапсырма шешілді! +15 ұпай</h5>
+    </div>
+    {% else %}
+    <div class="flag-submit-box">
+        <h5>🚩 Flag енгіз</h5>
+        <div class="flag-input-group">
+            <input type="text" id="flag-input" class="flag-input form-control"
+                   placeholder="flag{...}" autocomplete="off">
+            <button class="btn-submit-flag" onclick="submitFlag('ch2')">Тексеру</button>
+        </div>
+        <div id="flag-result" class="flag-result"></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

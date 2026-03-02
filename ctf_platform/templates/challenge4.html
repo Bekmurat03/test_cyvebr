@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Challenge 4: Midnight Melody{% endblock %}
+
+{% block content %}
+<div class="challenge-page">
+    <a href="{{ url_for('dashboard') }}" style="color:var(--text-muted); font-size:.85rem; text-decoration:none;">
+        ← Dashboard
+    </a>
+
+    <div class="ch-header-meta mt-3">
+        <div class="ch-header-icon">🎵</div>
+        <div class="ch-header-info">
+            <div style="font-size:.75rem;color:var(--accent-cyan);letter-spacing:1.5px;text-transform:uppercase;">Steganography · 15 ұпай</div>
+            <h1><span>Midnight Melody</span></h1>
+        </div>
+    </div>
+
+    <div class="challenge-description-box">
+        <h5>📋 Тапсырма</h5>
+        <p>
+            <strong>challenge.wav</strong> аудио файлы жай ән емес.
+            Оның ішінде <strong>ZIP мұрағаты</strong> жасырылған.
+            ZIP-тің ішінде <code>flag.txt</code> файлы бар. Тап!
+        </p>
+    </div>
+
+    <a href="{{ url_for('serve_challenge_file', filename='challenge.wav') }}" class="download-btn">
+        ⬇️ challenge.wav жүктеу
+    </a>
+
+    <div class="hint-box">
+        <div class="hint-label">💡 Кеңес</div>
+        <p>
+            WAV файлының соңына бинарлық деректер қосылған.
+            ZIP сигнатурасы: <code>50 4B 03 04</code>.<br>
+            <br>
+            Файлды hex-тен ізде немесе <code>binwalk</code> / <code>foremost</code> қолдан.
+            Немесе Python-мен ZIP offset-ін тауып шығарып ал.
+        </p>
+    </div>
+
+    <div class="challenge-description-box" style="border-left-color:var(--accent-purple)">
+        <h5 style="color:var(--accent-purple)">🐍 ZIP шығарып алу (Python)</h5>
+        <div class="code-block">
+ZIP_SIG = b'\x50\x4B\x03\x04'<br>
+<br>
+with open('challenge.wav', 'rb') as f:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data = f.read()<br>
+<br>
+# ZIP сигнатурасының орнын тап<br>
+offset = data.find(ZIP_SIG)<br>
+if offset == -1:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("ZIP табылмады!")<br>
+else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(f"ZIP табылды: offset={offset}")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;zip_data = data[offset:]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with open('extracted.zip', 'wb') as out:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.write(zip_data)<br>
+<br>
+# Шығарып алу<br>
+import zipfile<br>
+with zipfile.ZipFile('extracted.zip') as z:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;z.extractall('output')<br>
+# output/flag.txt файлын оқы
+        </div>
+    </div>
+
+    <div class="challenge-description-box">
+        <h5>🛠️ Терминал командалары</h5>
+        <div class="code-block">
+# binwalk (Linux/Mac)<br>
+binwalk -e challenge.wav<br>
+<br>
+# foremost<br>
+foremost -i challenge.wav -o output_dir<br>
+<br>
+# unzip тікелей байқап көру<br>
+unzip challenge.wav -d output_dir
+        </div>
+    </div>
+
+    {% if 'ch4' in solved %}
+    <div class="flag-submit-box" style="border-color:var(--accent-green);">
+        <h5 style="color:var(--accent-green)">✅ Тапсырма шешілді! +15 ұпай</h5>
+    </div>
+    {% else %}
+    <div class="flag-submit-box">
+        <h5>🚩 Flag енгіз</h5>
+        <div class="flag-input-group">
+            <input type="text" id="flag-input" class="flag-input form-control"
+                   placeholder="flag{...}" autocomplete="off">
+            <button class="btn-submit-flag" onclick="submitFlag('ch4')">Тексеру</button>
+        </div>
+        <div id="flag-result" class="flag-result"></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

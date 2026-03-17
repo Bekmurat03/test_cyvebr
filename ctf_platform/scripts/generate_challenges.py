@@ -18,26 +18,21 @@ os.makedirs(CHALLENGES_DIR, exist_ok=True)
 
 # ─── Challenge 2: XOR Encrypted Image ────────────────────────────────────────
 def generate_xor_challenge():
-    """Create a 1×1 white PNG then XOR-encrypt it with key 0x5A."""
-    # Minimal valid 1x1 white PNG (raw bytes)
-    png_bytes = bytes([
-        0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,  # PNG signature
-        0x00,0x00,0x00,0x0D,                          # IHDR length
-        0x49,0x48,0x44,0x52,                          # IHDR
-        0x00,0x00,0x00,0x01,                          # width = 1
-        0x00,0x00,0x00,0x01,                          # height = 1
-        0x08,0x02,                                    # 8-bit, RGB
-        0x00,0x00,0x00,
-        0x90,0x77,0x53,0xDE,                          # CRC
-        0x00,0x00,0x00,0x0C,                          # IDAT length
-        0x49,0x44,0x41,0x54,                          # IDAT
-        0x08,0xD7,0x63,0xF8,0xFF,0xFF,0x3F,0x00,
-        0x05,0xFE,0x02,0xFE,
-        0xDC,0xCC,0x59,0xE7,                          # CRC
-        0x00,0x00,0x00,0x00,                          # IEND length
-        0x49,0x45,0x4E,0x44,                          # IEND
-        0xAE,0x42,0x60,0x82,                          # CRC
-    ])
+    """Create a PNG with flag text then XOR-encrypt it with key 0x5A."""
+    from PIL import Image, ImageDraw, ImageFont
+    import io
+
+    # Create image with flag text
+    img = Image.new('RGB', (400, 100), color=(20, 20, 30))
+    draw = ImageDraw.Draw(img)
+    
+    text = "flag{xor_key_is_0x5A}"
+    draw.text((20, 35), text, fill=(0, 255, 128))
+    
+    # Save to bytes
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    png_bytes = buf.getvalue()
 
     XOR_KEY = 0x5A
     encrypted = bytes([b ^ XOR_KEY for b in png_bytes])

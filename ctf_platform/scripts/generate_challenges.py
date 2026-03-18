@@ -26,7 +26,7 @@ def generate_xor_challenge():
     img = Image.new('RGB', (400, 100), color=(20, 20, 30))
     draw = ImageDraw.Draw(img)
     
-    text = "flag{xor_key_is_0x5A}"
+    text = "flag{w5kz_xor_br3ak_7c1d}"
     draw.text((20, 35), text, fill=(0, 255, 128))
     
     # Save to bytes
@@ -55,7 +55,7 @@ def generate_corrupted_header_challenge():
     img = Image.new('RGB', (400, 100), color=(20, 20, 30))
     draw = ImageDraw.Draw(img)
 
-    text = "flag{header_restored_success}"
+    text = "flag{w5kz_h3ad3r_f1x_4e8b}"
     draw.text((20, 35), text, fill=(0, 255, 128))
 
     buf = io.BytesIO()
@@ -78,7 +78,7 @@ def generate_wav_challenge():
     # Create ZIP in memory
     zip_buf = io.BytesIO()
     with zipfile.ZipFile(zip_buf, 'w', zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr('flag.txt', 'flag{hidden_in_sound}\n')
+        zf.writestr('flag.txt', 'flag{w5kz_st3g0_w4v_2k9x}\n')
 
     zip_bytes = zip_buf.getvalue()
 

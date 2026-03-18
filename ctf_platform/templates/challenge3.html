@@ -18,53 +18,23 @@
     <div class="challenge-description-box">
         <h5>📋 Тапсырма</h5>
         <p>
-            <strong>flag.jpg</strong> файлының алғашқы байттары бүлінген — ашылмайды.
-            JPEG форматының дұрыс сигнатурасын қалпына келтіріп, суретті ашқанда Flag табасың!
+            Біздің жүйелік әкімшілеріміз хакерлердің серверінен маңызды файлды ұстап қалды.
+            Барлау деректері бойынша, бұл файлда жасырын құпия сөз (flag) бар және ол сурет болуы мүмкін.
+        </p>
+        <p class="mt-2">
+            Бірақ файл ашылмай тұр. Хакерлер оның тақырыпшасын (header) әдейі бүлдіріп кеткен сияқты.
+        </p>
+        <p class="mt-2">
+            Тапсырма: Файл құрылымын зерттеп, оны қалпына келтіріңіз және суреттегі түды табыңыз.
+        </p>
+        <p class="mt-2" style="color:var(--text-muted); font-size:.9rem;">
+            Мақсат: Файлды қалпына келтіріңіз және суреттегі түды табыңыз.
         </p>
     </div>
 
     <a href="{{ url_for('serve_challenge_file', filename='flag.jpg') }}" class="download-btn">
         ⬇️ flag.jpg жүктеу
     </a>
-
-    <div class="hint-box">
-        <div class="hint-label">💡 Кеңес</div>
-        <p>
-            JPEG файлдары міндетті түрде мына байттардан басталуы керек:<br>
-            <code>FF D8 FF E0</code> (немесе <code>FF D8 FF E1</code>)<br>
-            <br>
-            Бүлінген файлда бірінші 2 байт қате. Hex editor (HxD, 010 Editor, xxd) қолданып
-            алғашқы байттарды дұрыстап сақта, содан кейін суретті кез-келген image viewer-мен аш.
-        </p>
-    </div>
-
-    <div class="challenge-description-box" style="border-left-color:var(--accent-purple)">
-        <h5 style="color:var(--accent-purple)">🐍 Python-мен қалпына келтіру</h5>
-        <div class="code-block">
-with open('flag.jpg', 'rb') as f:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;data = bytearray(f.read())<br>
-<br>
-# JPEG сигнатурасын қалпына келтіру<br>
-data[0] = 0xFF<br>
-data[1] = 0xD8<br>
-<br>
-with open('flag_fixed.jpg', 'wb') as f:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;f.write(data)<br>
-<br>
-print("Файл қалпына келтірілді → flag_fixed.jpg")
-        </div>
-    </div>
-
-    <div class="challenge-description-box">
-        <h5>🔬 Файл форматтары анықтамасы</h5>
-        <div class="code-block">
-JPEG:  FF D8 FF E0 ...<br>
-PNG:   89 50 4E 47 0D 0A 1A 0A<br>
-GIF:   47 49 46 38 39 61 (GIF89a)<br>
-PDF:   25 50 44 46 (%PDF)<br>
-ZIP:   50 4B 03 04
-        </div>
-    </div>
 
     {% if 'ch3' in solved %}
     <div class="flag-submit-box" style="border-color:var(--accent-green);">

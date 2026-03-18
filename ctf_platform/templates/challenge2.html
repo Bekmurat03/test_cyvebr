@@ -18,46 +18,27 @@
     <div class="challenge-description-box">
         <h5>📋 Тапсырма</h5>
         <p>
-            Төмендегі <strong>encrypted.bin</strong> файлы — бір байттық XOR кілтімен шифрланған PNG сурет.
-            Кілт <code style="color:var(--accent-yellow)">0x00</code> мен
-            <code style="color:var(--accent-yellow)">0xFF</code> аралығындағы бір байт.
+            Біз қылмыскерлердің компьютерлік желісінен маңызды суретті қолға түсірдік.
+            Бірақ файл ашылмай тұр — ол бүлінген немесе шифрланған сияқты.
         </p>
+        <p class="mt-2">Біздің барлаушылардың айтуынша:</p>
+        <ul style="margin-left:1.5rem; margin-top:.5rem; color:var(--text-muted); line-height:2;">
+            <li>Бұл PNG сурет болуы керек.</li>
+            <li>Шифрлау үшін XOR амалы қолданылған.</li>
+            <li>Кілттің ұзындығы небәрі 1 байт.</li>
+        </ul>
         <p class="mt-2">
-            Барлық мүмкін кілттерді байқап (brute-force), суретті шифрсыздап,
-            ішіндегі мәліметті тап!
+            Тапсырма: Скрипт жазып (Brute Force), дұрыс кілтті табыңыз, суретті қалпына келтіріңіз
+            және суретте жазылған түды (flag) енгізіңіз.
+        </p>
+        <p class="mt-2" style="color:var(--text-muted); font-size:.9rem;">
+            Мақсат: Суреттің ішінде жасырылған кілтті табу керек.
         </p>
     </div>
 
     <a href="{{ url_for('serve_challenge_file', filename='encrypted.bin') }}" class="download-btn">
         ⬇️ encrypted.bin жүктеу
     </a>
-
-    <div class="hint-box">
-        <div class="hint-label">💡 Кеңес</div>
-        <p>
-            Дұрыс шифрсызданған PNG файлы мына байттардан басталады:<br>
-            <code>0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A</code><br>
-            (PNG сигнатурасы). XOR кілтін осы паттерн арқылы анықта.
-        </p>
-    </div>
-
-    <div class="challenge-description-box" style="border-left-color:var(--accent-purple)">
-        <h5 style="color:var(--accent-purple)">🐍 Brute-force Python скриптінің бастамасы</h5>
-        <div class="code-block">
-with open('encrypted.bin', 'rb') as f:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;data = f.read()<br>
-<br>
-PNG_SIG = bytes([0x89, 0x50, 0x4E, 0x47])<br>
-<br>
-for key in range(256):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;decrypted = bytes([b ^ key for b in data])<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if decrypted[:4] == PNG_SIG:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"Кілт табылды: 0x{key:02X}")<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with open(f'result_{key}.png', 'wb') as out:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.write(decrypted)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break
-        </div>
-    </div>
 
     {% if 'ch2' in solved %}
     <div class="flag-submit-box" style="border-color:var(--accent-green);">

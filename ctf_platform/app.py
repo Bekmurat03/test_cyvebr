@@ -18,29 +18,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'ctf_super_secret_key_2024')
 CHALLENGES_DIR = os.path.join(os.path.dirname(__file__), 'challenges')
 
 # ─── Token encoding for Challenge 1 ──────────────────────────────────────────
-# Encoding: JSON keys/values are ROT13'd, then the whole thing is Base85 encoded.
-# Old base64.b64decode() will fail — students must figure out Base85 + ROT13.
-
-def _rot13(s):
-    result = []
-    for c in s:
-        if 'a' <= c <= 'z':
-            result.append(chr((ord(c) - ord('a') + 13) % 26 + ord('a')))
-        elif 'A' <= c <= 'Z':
-            result.append(chr((ord(c) - ord('A') + 13) % 26 + ord('A')))
-        else:
-            result.append(c)
-    return ''.join(result)
-
-def encode_token(data: dict) -> str:
-    """ROT13 all string values, then Base85 encode."""
-    rotated = {_rot13(k): _rot13(v) if isinstance(v, str) else v for k, v in data.items()}
-    return base64.b85encode(json.dumps(rotated).encode()).decode()
-
-def decode_token(token: str) -> dict:
-    """Base85 decode, then reverse ROT13 on keys/values."""
-    rotated = json.loads(base64.b85decode(token).decode())
-    return {_rot13(k): _rot13(v) if isinstance(v, str) else v for k, v in rotated.items()}
+# Simple Base64 encoded JSON — students must decode and change role to admin.
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'ctf_super_secret_key_2024')
@@ -150,7 +128,9 @@ def login():
 
             # Set challenge-1 role cookie (guest by default)
             resp = make_response(redirect(url_for('dashboard')))
-            payload = encode_token({'user': username, 'role': 'guest'})
+            payload = base64.b64encode(
+                json.dumps({'user': username, 'role': 'guest'}).encode()
+            ).decode()
             resp.set_cookie('role_token', payload, httponly=False)  # intentionally not httponly
             return resp
         else:
@@ -231,7 +211,7 @@ def admin():
 
     if cookie_val:
         try:
-            decoded = decode_token(cookie_val)
+            decoded = json.loads(base64.b64decode(cookie_val).decode())
             if decoded.get('role') == 'admin':
                 flag = FLAGS['ch1']
             else:

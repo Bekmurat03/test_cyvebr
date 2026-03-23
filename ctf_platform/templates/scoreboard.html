@@ -23,7 +23,6 @@
         </div>
     </div>
 
-    <!-- Progress -->
     <div style="margin-bottom:1.75rem;">
         <div style="display:flex;justify-content:space-between;color:var(--text-muted);font-size:.8rem;margin-bottom:.4rem;">
             <span>Ілгерілеу</span>
@@ -34,7 +33,40 @@
         </div>
     </div>
 
-    <!-- Challenge Breakdown -->
+    <!-- Module A -->
+    <div style="margin-bottom:.5rem;">
+        <span class="module-tag module-a" style="font-size:.75rem;">МОДУЛЬ А</span>
+    </div>
+    <table class="score-table" style="margin-bottom:1.5rem;">
+        <thead>
+            <tr>
+                <th>Тапсырма</th>
+                <th>Санат</th>
+                <th style="text-align:right">Ұпай</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in breakdown_a %}
+            <tr class="score-row {% if item.solved %}solved-row{% endif %}">
+                <td>
+                    <span style="font-size:1.1rem;margin-right:.4rem;">{{ item.icon }}</span>
+                    <span style="font-weight:600;">{{ item.title }}</span>
+                </td>
+                <td style="color:var(--text-muted); font-size:.85rem;">{{ item.category }}</td>
+                <td>
+                    <span class="score-pts {% if item.solved %}solved{% else %}unsolved{% endif %}">
+                        {% if item.solved %}+{{ item.points }}{% else %}—{% endif %}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Module B -->
+    <div style="margin-bottom:.5rem;">
+        <span class="module-tag module-b" style="font-size:.75rem;">МОДУЛЬ В</span>
+    </div>
     <table class="score-table">
         <thead>
             <tr>
@@ -44,7 +76,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in breakdown %}
+            {% for item in breakdown_b %}
             <tr class="score-row {% if item.solved %}solved-row{% endif %}">
                 <td>
                     <span style="font-size:1.1rem;margin-right:.4rem;">{{ item.icon }}</span>

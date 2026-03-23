@@ -39,9 +39,13 @@ FLAGS = {
     'ch2': 'flag{w5kz_xor_br3ak_7c1d}',
     'ch3': 'flag{w5kz_h3ad3r_f1x_4e8b}',
     'ch4': 'flag{w5kz_st3g0_w4v_2k9x}',
+    # Module B
+    'ch_b1': 'flag{w5kz_rce_upl04d_3x9p}',
+    'ch_b2': 'flag{w5kz_r00t_su1d_7f3k}',
 }
 POINTS_PER_CHALLENGE = 15
 
+# ─── Module A metadata ────────────────────────────────────────────────────────
 CHALLENGE_META = {
     'ch1': {
         'title': 'Magic Token',
@@ -92,6 +96,36 @@ CHALLENGE_META = {
             'Киберқауіпсіздік бөліміміз күдікті серверден музыкалық файл тапты. '
             'Әуеннің өзінде ешнәрсе естілмейді, бірақ файлдың құрылымында артық нәрсе бар сияқты. '
             'Файлдың ішкі құрылымын тексеріп, жасырын файлды шығарып алыңыз.'
+        ),
+        'hint': '',
+    },
+}
+
+# ─── Module B metadata ────────────────────────────────────────────────────────
+CHALLENGE_META_B = {
+    'ch_b1': {
+        'title': 'Corporate File Server',
+        'category': 'Web Exploitation',
+        'icon': '🌐',
+        'difficulty': 'Орташа',
+        'difficulty_class': 'medium',
+        'description': (
+            'Барлаушылар бәсекелестің корпоративтік файл алмасу серверін тапты. '
+            'Сайттағы осалдықты тауып, серверге файл жүктеңіз (RCE). '
+            'www-data немесе user атынан серверге кіріңіз және /home/user/user.txt файлындағы жалаушаны табыңыз.'
+        ),
+        'hint': '',
+    },
+    'ch_b2': {
+        'title': 'Root Access',
+        'category': 'Privilege Escalation',
+        'icon': '👑',
+        'difficulty': 'Қиын',
+        'difficulty_class': 'hard',
+        'description': (
+            'Сіз сервердің ішіндесіз, бірақ құқығыңыз шектеулі. '
+            'Жүйе әкімшісі (root) кейбір бағдарламаларды дұрыс баптамаған сияқты. '
+            'SUID биттері бар файлдарды зерттеп, root құқығын иемденіп, /root/root.txt файлындағы жалаушаны табыңыз.'
         ),
         'hint': '',
     },
@@ -154,6 +188,7 @@ def dashboard():
         'dashboard.html',
         username=session['username'],
         challenges=CHALLENGE_META,
+        challenges_b=CHALLENGE_META_B,
         solved=solved,
         score=get_score(),
         max_score=len(FLAGS) * POINTS_PER_CHALLENGE,
@@ -163,18 +198,23 @@ def dashboard():
 @app.route('/challenge/<ch_id>')
 @login_required
 def challenge(ch_id):
-    if ch_id not in CHALLENGE_META:
-        return redirect(url_for('dashboard'))
-    meta = CHALLENGE_META[ch_id]
-    solved = session.get('solved', [])
-    return render_template(
-        f'challenge{ch_id[2:]}.html',
-        ch_id=ch_id,
-        meta=meta,
-        solved=solved,
-        score=get_score(),
-        username=session['username'],
-    )
+    if ch_id in CHALLENGE_META:
+        meta = CHALLENGE_META[ch_id]
+        solved = session.get('solved', [])
+        return render_template(
+            f'challenge{ch_id[2:]}.html',
+            ch_id=ch_id, meta=meta, solved=solved,
+            score=get_score(), username=session['username'],
+        )
+    elif ch_id in CHALLENGE_META_B:
+        meta = CHALLENGE_META_B[ch_id]
+        solved = session.get('solved', [])
+        return render_template(
+            f'challenge_b{ch_id[4:]}.html',
+            ch_id=ch_id, meta=meta, solved=solved,
+            score=get_score(), username=session['username'],
+        )
+    return redirect(url_for('dashboard'))
 
 # ─── Flag Submit ──────────────────────────────────────────────────────────────
 @app.route('/submit/<ch_id>', methods=['POST'])
@@ -243,20 +283,25 @@ def serve_challenge_file(filename):
 @login_required
 def scoreboard():
     solved = session.get('solved', [])
-    breakdown = []
+    breakdown_a = []
     for ch_id, meta in CHALLENGE_META.items():
-        breakdown.append({
-            'ch_id': ch_id,
-            'title': meta['title'],
-            'category': meta['category'],
-            'icon': meta['icon'],
-            'points': POINTS_PER_CHALLENGE if ch_id in solved else 0,
+        breakdown_a.append({
+            'ch_id': ch_id, 'title': meta['title'], 'category': meta['category'],
+            'icon': meta['icon'], 'points': POINTS_PER_CHALLENGE if ch_id in solved else 0,
+            'solved': ch_id in solved,
+        })
+    breakdown_b = []
+    for ch_id, meta in CHALLENGE_META_B.items():
+        breakdown_b.append({
+            'ch_id': ch_id, 'title': meta['title'], 'category': meta['category'],
+            'icon': meta['icon'], 'points': POINTS_PER_CHALLENGE if ch_id in solved else 0,
             'solved': ch_id in solved,
         })
     return render_template(
         'scoreboard.html',
         username=session['username'],
-        breakdown=breakdown,
+        breakdown_a=breakdown_a,
+        breakdown_b=breakdown_b,
         score=get_score(),
         max_score=len(FLAGS) * POINTS_PER_CHALLENGE,
     )

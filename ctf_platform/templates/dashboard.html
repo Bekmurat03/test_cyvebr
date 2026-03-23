@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% set max_score = 60 %}
+{% set max_score = 90 %}
 {% block title %}Dashboard – CTF Practice Platform{% endblock %}
 
 {% block content %}
 <div class="dashboard-header">
     <h2>Сәлем, <span>{{ username }}</span>! 👋</h2>
-    <p>Төмендегі тапсырмаларды шеш және ұпайыңды жина.</p>
+    <p>Модульді таңдап, тапсырмаларды шеш және ұпайыңды жина.</p>
     <div class="progress-section mt-3">
         <div class="progress-label">
             <span>Жалпы ілгерілеу</span>
@@ -17,25 +17,62 @@
     </div>
 </div>
 
-<div class="challenge-grid">
-    {% for ch_id, meta in challenges.items() %}
-    <a class="ch-card {% if ch_id in solved %}solved{% endif %}"
-       href="{{ url_for('challenge', ch_id=ch_id) }}">
-        {% if ch_id in solved %}
-        <span class="solved-badge">✓ ШЕШІЛДІ</span>
-        {% endif %}
-        <span class="ch-icon">{{ meta.icon }}</span>
-        <div class="ch-category">{{ meta.category }}</div>
-        <div class="ch-title">{{ meta.title }}</div>
-        <p class="ch-desc">{{ meta.description }}</p>
-        <div class="ch-footer">
-            <span class="difficulty-badge {{ meta.difficulty_class }}">{{ meta.difficulty }}</span>
-            <span class="ch-points">
-                {% if ch_id in solved %}✅{% else %}⭕{% endif %}
-                15 ұпай
-            </span>
-        </div>
-    </a>
-    {% endfor %}
+<!-- Module A -->
+<div class="module-section">
+    <div class="module-label">
+        <span class="module-tag module-a">МОДУЛЬ А</span>
+        <span class="module-title">CTF – Capture The Flag</span>
+        <span class="module-pts">{{ solved | selectattr('in', 'equalto', challenges.keys() | list) | list | length * 15 }} / 60 ұпай</span>
+    </div>
+    <div class="challenge-grid">
+        {% for ch_id, meta in challenges.items() %}
+        <a class="ch-card {% if ch_id in solved %}solved{% endif %}"
+           href="{{ url_for('challenge', ch_id=ch_id) }}">
+            {% if ch_id in solved %}
+            <span class="solved-badge">✓ ШЕШІЛДІ</span>
+            {% endif %}
+            <span class="ch-icon">{{ meta.icon }}</span>
+            <div class="ch-category">{{ meta.category }}</div>
+            <div class="ch-title">{{ meta.title }}</div>
+            <p class="ch-desc">{{ meta.description }}</p>
+            <div class="ch-footer">
+                <span class="difficulty-badge {{ meta.difficulty_class }}">{{ meta.difficulty }}</span>
+                <span class="ch-points">
+                    {% if ch_id in solved %}✅{% else %}⭕{% endif %}
+                    15 ұпай
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Module B -->
+<div class="module-section">
+    <div class="module-label">
+        <span class="module-tag module-b">МОДУЛЬ В</span>
+        <span class="module-title">Penetration Testing</span>
+    </div>
+    <div class="challenge-grid">
+        {% for ch_id, meta in challenges_b.items() %}
+        <a class="ch-card {% if ch_id in solved %}solved{% endif %}"
+           href="{{ url_for('challenge', ch_id=ch_id) }}">
+            {% if ch_id in solved %}
+            <span class="solved-badge">✓ ШЕШІЛДІ</span>
+            {% endif %}
+            <span class="ch-icon">{{ meta.icon }}</span>
+            <div class="ch-category">{{ meta.category }}</div>
+            <div class="ch-title">{{ meta.title }}</div>
+            <p class="ch-desc">{{ meta.description }}</p>
+            <div class="ch-footer">
+                <span class="difficulty-badge {{ meta.difficulty_class }}">{{ meta.difficulty }}</span>
+                <span class="ch-points">
+                    {% if ch_id in solved %}✅{% else %}⭕{% endif %}
+                    15 ұпай
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

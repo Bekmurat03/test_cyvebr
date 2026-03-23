@@ -27,9 +27,7 @@
       <div class="container-fluid px-4">
         <a class="navbar-brand ctf-brand" href="{{ url_for('dashboard') }}">
           <span class="brand-icon">⚡</span>
-          <span class="brand-text"
-            >CTF<span class="brand-accent"> M:A</span></span
-          >
+          <span class="brand-text">CTF<span class="brand-accent"> Platform</span></span>
         </a>
         <button
           class="navbar-toggler"
@@ -58,7 +56,7 @@
             <li class="nav-item">
               <span class="score-badge">
                 {{ score }}<span class="score-max"
-                  >/{{ session.get('max_score', 60) }}</span
+                  >/{{ session.get('max_score', 90) }}</span
                 >
                 pts
               </span>

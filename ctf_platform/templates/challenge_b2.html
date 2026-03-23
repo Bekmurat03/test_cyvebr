@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Challenge B2: Root Access{% endblock %}
+
+{% block content %}
+<div class="challenge-page">
+    <a href="{{ url_for('dashboard') }}" style="color:var(--text-muted); font-size:.85rem; text-decoration:none;">
+        ← Dashboard
+    </a>
+
+    <div class="ch-header-meta mt-3">
+        <div class="ch-header-icon">👑</div>
+        <div class="ch-header-info">
+            <div style="font-size:.75rem;color:var(--accent-cyan);letter-spacing:1.5px;text-transform:uppercase;">Privilege Escalation · 15 ұпай</div>
+            <h1><span>Root Access (Толық басқаруды алу)</span></h1>
+        </div>
+    </div>
+
+    <div class="challenge-description-box">
+        <h5>📋 Тапсырма</h5>
+        <p>
+            Сіз сервердің ішіндесіз, бірақ құқығыңыз шектеулі.
+            Жүйе әкімшісі (root) кейбір бағдарламаларды дұрыс баптамаған сияқты.
+        </p>
+        <p class="mt-2">Мақсатыңыз:</p>
+        <ul style="margin-left:1.5rem; margin-top:.5rem; color:var(--text-muted); line-height:2;">
+            <li>Жүйедегі SUID биттері бар файлдарды зерттеңіз.</li>
+            <li>Root құқығын иемденіңіз.</li>
+            <li>/root/root.txt файлындағы жалаушаны табыңыз.</li>
+        </ul>
+        <p class="mt-2" style="color:var(--text-muted); font-size:.9rem;">
+            Сілтеме: <a href="http://192.168.0.181:8080" target="_blank" style="color:var(--accent-cyan);">http://192.168.0.181:8080</a>
+        </p>
+    </div>
+
+    {% if 'ch_b2' in solved %}
+    <div class="flag-submit-box" style="border-color:var(--accent-green);">
+        <h5 style="color:var(--accent-green)">✅ Тапсырма шешілді! +15 ұпай</h5>
+    </div>
+    {% else %}
+    <div class="flag-submit-box">
+        <h5>🚩 Flag енгіз</h5>
+        <div class="flag-input-group">
+            <input type="text" id="flag-input" class="flag-input form-control"
+                   placeholder="flag{...}" autocomplete="off">
+            <button class="btn-submit-flag" onclick="submitFlag('ch_b2')">Тексеру</button>
+        </div>
+        <div id="flag-result" class="flag-result"></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

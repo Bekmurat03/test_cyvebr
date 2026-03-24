@@ -15,5 +15,6 @@ EXPOSE 5000
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV SECRET_KEY=ctf_super_secret_key_2024
+ENV RENDER=true
 
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "app:app"]

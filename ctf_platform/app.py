@@ -1,6 +1,6 @@
 """
 CTF Practice Platform – Flask Backend
-Module A | Оқу мақсатындағы платформа
+Module A + B | Оқу мақсатындағы платформа
 """
 
 import os
@@ -14,16 +14,13 @@ from flask import (
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'ctf_super_secret_key_2024')
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = bool(os.environ.get('RENDER', False))  # True on Render (HTTPS)
 
 CHALLENGES_DIR = os.path.join(os.path.dirname(__file__), 'challenges')
 
 # ─── Token encoding for Challenge 1 ──────────────────────────────────────────
 # Simple Base64 encoded JSON — students must decode and change role to admin.
-
-app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'ctf_super_secret_key_2024')
-
-CHALLENGES_DIR = os.path.join(os.path.dirname(__file__), 'challenges')
 
 # ─── Users ─────────────────────────────────────────────────────────────────
 USERS = {
